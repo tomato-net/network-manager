@@ -1,18 +1,27 @@
 import * as React from "react";
 import {Typography} from "@mui/material";
 
-export const Home: React.FC = () => {
-    const [response, setResponse] = React.useState<string>("")
+interface ISubnet {
+    cidr: string
+}
+
+type Props = {
+    id: string
+}
+
+export const Home: React.FC<Props> = (props) => {
+    const [response, setResponse] = React.useState<ISubnet>({ cidr: "" })
+    const { id } = props
 
     React.useEffect(() => {
-        fetch(`${process.env.REACT_APP_API_URL}/noauth`)
+        fetch(`${process.env.REACT_APP_API_URL}/subnets/${id}`)
             .then(res => res.json())
-            .then(res => setResponse(res.message))
-    })
+            .then(res => setResponse(res))
+    }, [id]);
 
     return (
         <Typography variant={`h1`}>
-            {response}
+            Subnet with ID: {id} has CIDR {response.cidr}
         </Typography>
     )
 }

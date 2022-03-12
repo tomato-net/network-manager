@@ -1,35 +1,31 @@
 import * as React from 'react';
 
 import { themes, ThemeContext } from './theme';
-import { Theme, ThemeProvider as MThemeProvider } from '@mui/material';
-
-interface State {
-    theme: Theme;
-}
+import { useMediaQuery, ThemeProvider as MThemeProvider } from '@mui/material';
 
 interface Props {
     children: React.ReactChild;
 }
 
-export class ThemeProvider extends React.Component<Props, State> {
-    readonly state: State = { theme: themes.light };
+// TODO: useCookies to store theme palette
+export const ThemeProvider: React.FC<Props> = props => {
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const [ theme, setTheme ] = React.useState(prefersDarkMode ? themes.dark : themes.light)
 
-    toggleTheme = () => {
-        this.setState(state => ({
-            theme: state.theme === themes.light ? themes.dark : themes.light,
-        }));
+    React.useMemo(
+        () => setTheme(prefersDarkMode ? themes.dark : themes.light),
+        [prefersDarkMode]
+    )
+
+    const toggleTheme = () => {
+        setTheme((prevTheme) => (prevTheme === themes.light ? themes.dark : themes.light));
     }
 
-    render() {
-        const { theme } = this.state;
-        const { toggleTheme } = this;
-
-        return (
-            <ThemeContext.Provider value={{ theme, toggleTheme }}>
-                <MThemeProvider theme={theme}>
-                    {this.props.children}
-                </MThemeProvider>
-            </ThemeContext.Provider>
-        );
-    }
+    return (
+        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+            <MThemeProvider theme={theme}>
+                {props.children}
+            </MThemeProvider>
+        </ThemeContext.Provider>
+    );
 }

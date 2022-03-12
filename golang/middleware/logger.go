@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"time"
@@ -15,7 +16,9 @@ func (l *Logger) Handle(next HandlerFunc) HandlerFunc {
 		startTime := time.Now()
 		l.Logger.Printf("processing request")
 
-		res, err := next(w, r)
+		loggingRequest := r.WithContext(context.WithValue(r.Context(), "logger", l.Logger))
+
+		res, err := next(w, loggingRequest)
 
 		l.Logger.Printf("request processed in %s ms\n", time.Now().Sub(startTime)*time.Millisecond)
 

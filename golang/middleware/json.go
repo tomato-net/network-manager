@@ -22,7 +22,9 @@ func (j *JSON) Handle(next HandlerFunc) HandlerFunc {
 
 		resJSON, err := json.Marshal(res)
 		if err != nil {
-			return nil, err
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(""))
+			return res, err
 		}
 
 		w.WriteHeader(http.StatusOK)

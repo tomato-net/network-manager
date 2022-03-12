@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"os"
 
-	"network-manager/home"
 	"network-manager/middleware"
 	"network-manager/router"
 	"network-manager/server"
+	"network-manager/subnet"
 )
 
 var (
@@ -18,11 +18,10 @@ var (
 func main() {
 	logger := log.New(os.Stdout, "network-manager", log.LstdFlags|log.Lshortfile)
 
-	authMiddleware := &middleware.Auth{}
+	JSONMiddleware := &middleware.JSON{}
 	loggerMiddleware := &middleware.Logger{
 		Logger: logger,
 	}
-	JSONMiddleware := &middleware.JSON{}
 
 	errorHandler := func(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 		w.WriteHeader(http.StatusNotFound)
@@ -38,20 +37,12 @@ func main() {
 				HandlerFunc: errorHandler,
 			},
 			{
-				Path:        "/home",
-				HandlerFunc: home.Handler,
+				Path:           "/subnets/",
+				RESTController: &subnet.Controller{},
 				Middleware: []middleware.Handler{
 					JSONMiddleware,
 					loggerMiddleware,
-					authMiddleware,
-				},
-			},
-			{
-				Path:        "/noauth",
-				HandlerFunc: home.Handler,
-				Middleware: []middleware.Handler{
-					JSONMiddleware,
-					loggerMiddleware,
+					&middleware.FeatureGate{EnvSource: "FEATURE_SUBNET"},
 				},
 			},
 		},
@@ -60,6 +51,7 @@ func main() {
 	mux := http.NewServeMux()
 	rtr.SetupRoutes(mux)
 
+	// TODO: TLS
 	srv := server.New(mux, ServiceAddress)
 	logger.Println("setting up server")
 	if err := srv.ListenAndServe(); err != nil {
