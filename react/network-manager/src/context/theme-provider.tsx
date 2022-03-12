@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import {themes, Theme, ThemeContext} from './theme';
+import { themes, ThemeContext } from './theme';
+import { Theme, ThemeProvider as MThemeProvider } from '@mui/material';
 
 interface State {
     theme: Theme;
@@ -11,7 +12,7 @@ export class ThemeProvider extends React.Component<{ children: React.ReactChild 
 
     toggleTheme = () => {
         this.setState(state => ({
-            theme: state.theme == themes.light ? themes.dark : themes.light,
+            theme: state.theme === themes.light ? themes.dark : themes.light,
         }));
     }
 
@@ -21,7 +22,9 @@ export class ThemeProvider extends React.Component<{ children: React.ReactChild 
 
         return (
             <ThemeContext.Provider value={{ theme, toggleTheme }}>
-                {this.props.children}
+                <MThemeProvider theme={theme}>
+                    {this.props.children}
+                </MThemeProvider>
             </ThemeContext.Provider>
         );
     }

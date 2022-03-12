@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-export type Theme = React.CSSProperties;
+import { createTheme, Theme } from '@mui/material';
 
 type Themes = {
     dark: Theme;
@@ -8,14 +7,16 @@ type Themes = {
 };
 
 export const themes: Themes = {
-    dark: {
-        color: 'black',
-        backgroundColor: 'white',
-    },
-    light: {
-        color: 'white',
-        backgroundColor: 'black'
-    },
+    dark: createTheme({
+        palette: {
+            mode: 'dark',
+        },
+    }),
+    light: createTheme({
+        palette: {
+            mode: 'light',
+        },
+    }),
 };
 
 export type ThemeContextProps = { theme: Theme; toggleTheme?: () => void };
