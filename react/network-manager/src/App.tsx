@@ -2,12 +2,13 @@ import React from 'react';
 
 import './App.css';
 import * as Components from './components';
+import { ThemeProvider } from './context';
 
 function App() {
   return (
-      <div>
-        <Components.Home/>
-      </div>
+      <ThemeProvider>
+          <Components.ToggleThemeButton />
+      </ThemeProvider>
   );
 }
 
