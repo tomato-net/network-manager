@@ -2,23 +2,23 @@ package middleware
 
 import (
 	"context"
+	"errors"
 	"net/http"
 )
 
+const ErrUnauthorized = "unauthorized"
+
 type Auth struct{}
 
-func (a *Auth) Handle(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (a *Auth) Handle(next HandlerFunc) HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 		token := r.Header.Get("Authorization")
 		if token == "" {
-			w.WriteHeader(http.StatusUnauthorized)
-			w.Write([]byte(""))
-
-			return
+			return nil, errors.New(ErrUnauthorized)
 		}
 
 		namedRequest := r.WithContext(context.WithValue(r.Context(), "name", "thomas"))
 
-		next(w, namedRequest)
+		return next(w, namedRequest)
 	}
 }

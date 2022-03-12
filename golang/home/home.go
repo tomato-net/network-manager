@@ -7,10 +7,14 @@ import (
 
 const message = "Hello, World!"
 
-func Handler(w http.ResponseWriter, r *http.Request) {
+type Response struct {
+	Message string `json:"message"`
+}
+
+func Handler(_ http.ResponseWriter, r *http.Request) (interface{}, error) {
 	name := r.Context().Value("name")
 
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(fmt.Sprintf("%s %s", message, name)))
+	return &Response{
+		Message: fmt.Sprintf("%s %s", message, name),
+	}, nil
 }

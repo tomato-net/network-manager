@@ -7,7 +7,11 @@ interface State {
     theme: Theme;
 }
 
-export class ThemeProvider extends React.Component<{ children: React.ReactChild }, State> {
+interface Props {
+    children: React.ReactChild;
+}
+
+export class ThemeProvider extends React.Component<Props, State> {
     readonly state: State = { theme: themes.light };
 
     toggleTheme = () => {

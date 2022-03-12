@@ -5,5 +5,8 @@ import (
 )
 
 type Handler interface {
-	Handle(http.HandlerFunc) http.HandlerFunc
+	Handle(HandlerFunc) HandlerFunc
 }
+
+// TODO: Return object with status code, error, and payload?
+type HandlerFunc func(http.ResponseWriter, *http.Request) (interface{}, error)

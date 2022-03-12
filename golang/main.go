@@ -22,10 +22,13 @@ func main() {
 	loggerMiddleware := &middleware.Logger{
 		Logger: logger,
 	}
+	JSONMiddleware := &middleware.JSON{}
 
-	errorHandler := func(w http.ResponseWriter, r *http.Request) {
+	errorHandler := func(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("No page found"))
+		w.Write([]byte(""))
+
+		return nil, nil
 	}
 
 	rtr := &router.Router{
@@ -38,6 +41,7 @@ func main() {
 				Path:        "/home",
 				HandlerFunc: home.Handler,
 				Middleware: []middleware.Handler{
+					JSONMiddleware,
 					loggerMiddleware,
 					authMiddleware,
 				},
@@ -46,6 +50,7 @@ func main() {
 				Path:        "/noauth",
 				HandlerFunc: home.Handler,
 				Middleware: []middleware.Handler{
+					JSONMiddleware,
 					loggerMiddleware,
 				},
 			},
