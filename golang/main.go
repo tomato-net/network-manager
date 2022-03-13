@@ -31,19 +31,23 @@ func main() {
 	}
 
 	rtr := &router.Router{
-		Routes: []router.Route{
-			{
-				Path:        "/",
+		Handlers: []router.Handler{
+			&router.HTTPRoute{
+				Route: &router.Route{
+					Path: "/",
+				},
 				HandlerFunc: errorHandler,
 			},
-			{
-				Path:           "/subnets/",
-				RESTController: &subnet.Controller{},
-				Middleware: []middleware.Handler{
-					JSONMiddleware,
-					loggerMiddleware,
-					&middleware.FeatureGate{EnvSource: "FEATURE_SUBNET"},
+			&router.RESTRoute{
+				Route: &router.Route{
+					Path: "/subnets/",
+					Middleware: []middleware.Handler{
+						JSONMiddleware,
+						loggerMiddleware,
+						&middleware.FeatureGate{EnvSource: "FEATURE_SUBNET"},
+					},
 				},
+				RESTController: &subnet.Controller{},
 			},
 		},
 	}

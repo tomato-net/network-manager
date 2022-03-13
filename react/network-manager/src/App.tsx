@@ -3,12 +3,12 @@ import React from 'react';
 import './App.css';
 import * as Components from './components';
 import { ThemeProvider } from './context';
-import { Box, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 
 function App() {
   return (
       <ThemeProvider>
-          <Box sx={{
+          <Stack sx={{
               display: 'flex',
               width: '100%',
               alignItems: 'center',
@@ -19,11 +19,13 @@ function App() {
               p: 3,
           }}>
               <Components.ThemeToggleButton />
+              <Components.Home id={`1`} />
               <Components.Home id={`2`} />
+              <Components.Home id={`3`} />
               <Typography variant={`subtitle1`}>
                   Powered by {process.env.REACT_APP_API_URL}
               </Typography>
-          </Box>
+          </Stack>
       </ThemeProvider>
   );
 }

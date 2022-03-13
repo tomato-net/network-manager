@@ -1,7 +1,9 @@
 package subnet
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 )
 
 var (
@@ -41,11 +43,23 @@ func (c *Controller) Get(id string) (interface{}, error) {
 }
 
 func (c *Controller) List() ([]interface{}, error) {
-	return nil, nil
+	list := make([]interface{}, 0)
+	for _, s := range subnets {
+		list = append(list, interface{}(s))
+	}
+
+	return list, nil
 }
 
 func (c *Controller) Create(obj interface{}) (interface{}, error) {
-	return nil, nil
+	s, ok := obj.(*Subnet)
+	if !ok {
+		return nil, errors.New(fmt.Sprintf("invalid subnet %v", obj))
+	}
+
+	subnets = append(subnets, *s)
+
+	return s, nil
 }
 
 func (c *Controller) Update(id string, obj interface{}) (interface{}, error) {
@@ -54,4 +68,13 @@ func (c *Controller) Update(id string, obj interface{}) (interface{}, error) {
 
 func (c *Controller) Delete(id string) (interface{}, error) {
 	return nil, nil
+}
+
+func (c *Controller) Unmarshal(obj []byte) (interface{}, error) {
+	subnet := &Subnet{}
+	if err := json.Unmarshal(obj, subnet); err != nil {
+		return nil, err
+	}
+
+	return subnet, nil
 }

@@ -20,6 +20,10 @@ func (l *Logger) Handle(next HandlerFunc) HandlerFunc {
 
 		res, err := next(w, loggingRequest)
 
+		if err != nil {
+			l.Logger.Printf("error processing request: %v", err)
+		}
+
 		l.Logger.Printf("request processed in %s ms\n", time.Now().Sub(startTime)*time.Millisecond)
 
 		return res, err
