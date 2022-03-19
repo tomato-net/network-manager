@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 )
 
 var (
@@ -25,12 +26,12 @@ var (
 
 type Subnet struct {
 	ID   string `json:"id"`
-	CIDR CIDR   `json:"cidr"`
+	CIDR string `json:"cidr"`
 }
 
-type CIDR string
-
-type Controller struct{}
+type Controller struct {
+	Database *Database
+}
 
 func (c *Controller) Get(id string) (interface{}, error) {
 	for _, s := range subnets {
@@ -42,9 +43,19 @@ func (c *Controller) Get(id string) (interface{}, error) {
 	return nil, errors.New("Not found")
 }
 
-func (c *Controller) List() ([]interface{}, error) {
+func (c *Controller) List(listOpts map[string]string) ([]interface{}, error) {
+	options := make([]Option, 0)
+	if cidr, ok := listOpts["cidr"]; ok {
+		options = append(options, MatchingCIDR(cidr))
+	}
+
+	a_subnets, err := c.Database.Query(options...)
+	if err != nil {
+		return nil, err
+	}
+
 	list := make([]interface{}, 0)
-	for _, s := range subnets {
+	for _, s := range a_subnets {
 		list = append(list, interface{}(s))
 	}
 
@@ -77,4 +88,13 @@ func (c *Controller) Unmarshal(obj []byte) (interface{}, error) {
 	}
 
 	return subnet, nil
+}
+
+func (c *Controller) FilterQuery(values url.Values) map[string]string {
+	filteredQuery := make(map[string]string, 0)
+	if values.Has("cidr") {
+		filteredQuery["cidr"] = values.Get("cidr")
+	}
+
+	return filteredQuery
 }

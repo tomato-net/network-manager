@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"network-manager/middleware"
@@ -12,10 +13,11 @@ import (
 type RESTController interface {
 	Create(interface{}) (interface{}, error)
 	Get(string) (interface{}, error)
-	List() ([]interface{}, error)
+	List(map[string]string) ([]interface{}, error)
 	Update(string, interface{}) (interface{}, error)
 	Delete(string) (interface{}, error)
 	Unmarshal([]byte) (interface{}, error)
+	FilterQuery(url.Values) map[string]string
 }
 
 type RESTRoute struct {
@@ -29,12 +31,15 @@ func (r *RESTRoute) handlerFunc(c RESTController) middleware.HandlerFunc {
 		switch req.Method {
 		case http.MethodGet:
 			id := strings.TrimPrefix(req.URL.Path, r.Path)
-			if id == "" {
-				return c.List()
+			if id != "" {
+				return c.Get(id)
 			}
 
-			// TODO: Handle errors better like NotFound
-			return c.Get(id)
+			query := req.URL.Query()
+
+			filteredQuery := c.FilterQuery(query)
+
+			return c.List(filteredQuery)
 		case http.MethodPost:
 			body, err := ioutil.ReadAll(req.Body)
 			if err != nil {

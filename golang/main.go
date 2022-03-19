@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
+
 	"network-manager/middleware"
 	"network-manager/router"
 	"network-manager/server"
@@ -30,6 +32,14 @@ func main() {
 		return nil, nil
 	}
 
+	dbUri := "neo4j://localhost:7687"
+	driver, err := neo4j.NewDriver(dbUri, neo4j.NoAuth())
+	if err != nil {
+		panic(err)
+	}
+
+	defer driver.Close()
+
 	rtr := &router.Router{
 		Handlers: []router.Handler{
 			&router.HTTPRoute{
@@ -47,7 +57,7 @@ func main() {
 						&middleware.FeatureGate{EnvSource: "FEATURE_SUBNET"},
 					},
 				},
-				RESTController: &subnet.Controller{},
+				RESTController: &subnet.Controller{Database: &subnet.Database{Driver: driver}},
 			},
 		},
 	}
