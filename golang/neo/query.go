@@ -6,13 +6,15 @@ import (
 )
 
 type QueryOptions struct {
-	Limit      int
-	MatchTypes map[string]string
-	Returns    []string
-	Condition  *Condition
+	Limit                int
+	MatchTypes           map[string]string
+	Returns              []string
+	Condition            *Condition
+	OutwardsRelationship map[string]string
+	InwardsRelationship  map[string]string
 }
 
-func Returns(returns []string) QueryOption {
+func Returns(returns ...string) QueryOption {
 	return func(opts *QueryOptions) {
 		opts.Returns = returns
 	}
@@ -24,9 +26,9 @@ func Limit(limit int) QueryOption {
 	}
 }
 
-func Match(matchTypes map[string]string) QueryOption {
+func Match(matchTypes ...string) QueryOption {
 	return func(opts *QueryOptions) {
-		opts.MatchTypes = matchTypes
+		opts.MatchTypes = parseKVSlice(matchTypes)
 	}
 }
 
@@ -38,6 +40,29 @@ func Where(conditions ...*Condition) QueryOption {
 			opts.Condition = conditions[0]
 		}
 	}
+}
+
+func OutwardsRelated(relationships ...string) QueryOption {
+	return func(opts *QueryOptions) {
+		opts.OutwardsRelationship = parseKVSlice(relationships)
+	}
+}
+
+func InwardsRelated(relationships ...string) QueryOption {
+	return func(opts *QueryOptions) {
+		opts.InwardsRelationship = parseKVSlice(relationships)
+	}
+}
+
+func parseKVSlice(KV []string) map[string]string {
+	parsed := make(map[string]string, 0)
+	for i := 0; i < len(KV); i += 2 {
+		k := KV[i]
+		v := KV[i+1]
+		parsed[k] = v
+	}
+
+	return parsed
 }
 
 type QueryOption func(*QueryOptions)
@@ -107,7 +132,17 @@ func (q *Query) Build() string {
 
 	matchParts := make([]string, 0)
 	for k, v := range q.opts.MatchTypes {
-		matchParts = append(matchParts, fmt.Sprintf("(%s:%s)", k, v))
+		matchPart := fmt.Sprintf("(%s:%s)", k, v)
+
+		if or, ok := q.opts.OutwardsRelationship[k]; ok {
+			matchPart = fmt.Sprintf("%s%s", matchPart, or)
+		}
+
+		if ir, ok := q.opts.InwardsRelationship[k]; ok {
+			matchPart = fmt.Sprintf("%s%s", ir, matchPart)
+		}
+
+		matchParts = append(matchParts, matchPart)
 	}
 	queryParts = append(queryParts, strings.Join(matchParts, ", "))
 

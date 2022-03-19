@@ -19,9 +19,7 @@ function App() {
               p: 3,
           }}>
               <Components.ThemeToggleButton />
-              <Components.Home id={`1`} />
-              <Components.Home id={`2`} />
-              <Components.Home id={`3`} />
+              <Components.SubnetSearch />
               <Typography variant={`subtitle1`}>
                   Powered by {process.env.REACT_APP_API_URL}
               </Typography>

@@ -7,6 +7,7 @@ import (
 
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 
+	_interface "network-manager/interface"
 	"network-manager/middleware"
 	"network-manager/router"
 	"network-manager/server"
@@ -58,6 +59,16 @@ func main() {
 					},
 				},
 				RESTController: &subnet.Controller{Database: &subnet.Database{Driver: driver}},
+			},
+			&router.RESTRoute{
+				Route: &router.Route{
+					Path: "/interfaces/",
+					Middleware: []middleware.Handler{
+						JSONMiddleware,
+						loggerMiddleware,
+					},
+				},
+				RESTController: &_interface.Controller{Database: &_interface.Database{Driver: driver}},
 			},
 		},
 	}

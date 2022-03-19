@@ -1,8 +1,8 @@
-package subnet
+package _interface
 
 type Options struct {
 	Fuzzy bool
-	CIDR  *string
+	Name  *string
 	ID    *string
 	Limit int
 }
@@ -15,9 +15,9 @@ func FuzzyMatch() Option {
 	}
 }
 
-func MatchingCIDR(CIDR string) Option {
+func Name(name string) Option {
 	return func(args *Options) {
-		args.CIDR = &CIDR
+		args.Name = &name
 	}
 }
 

@@ -1,6 +1,7 @@
 package subnet
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -21,13 +22,22 @@ func (c *Database) Query(opts ...Option) ([]Subnet, error) {
 	}
 
 	queryOpts := []neo.QueryOption{
-		neo.Match(map[string]string{"s": "Subnet"}),
-		neo.Returns([]string{"s"}),
+		neo.Match("s", "Subnet"),
+		neo.InwardsRelated("s", "(i:Interface)-[:HAS_SUBNET]->"),
+		neo.Returns("s", "i"),
 	}
 
 	conditions := make([]*neo.Condition, 0)
 	if args.CIDR != nil {
-		conditions = append(conditions, neo.FuzzyEquals("s.cidr", fmt.Sprintf("'.*%s.*'", *args.CIDR)))
+		cidr := *args.CIDR
+		if args.Fuzzy {
+			cidr = fmt.Sprintf(".*%s.*", cidr)
+		}
+		conditions = append(conditions, neo.FuzzyEquals("s.cidr", fmt.Sprintf("'%s'", cidr)))
+	}
+
+	if args.ID != nil {
+		conditions = append(conditions, neo.Equals("id(s)", *args.ID))
 	}
 
 	if len(conditions) > 0 {
@@ -44,26 +54,80 @@ func (c *Database) Query(opts ...Option) ([]Subnet, error) {
 		return nil, err
 	}
 
-	subnets := make([]Subnet, 0)
+	subnets := make(map[string]Subnet, 0)
 	for result.Next() {
 		record := result.Record()
-		subnets = append(subnets, convertRecordToSubnet(record))
+		parseRecord(subnets, record)
 	}
 
-	return subnets, nil
+	ret := make([]Subnet, 0)
+	for _, v := range subnets {
+		ret = append(ret, v)
+	}
+
+	return ret, nil
 }
 
 func (c *Database) List() ([]Subnet, error) {
 	return c.Query()
 }
 
-func convertRecordToSubnet(record *neo4j.Record) (subnet Subnet) {
-	node := record.Values[0].(dbtype.Node)
-	subnet.ID = strconv.Itoa(int(node.Id))
-
-	if cidr, ok := node.Props["cidr"]; ok {
-		subnet.CIDR = cidr.(string)
+func (c *Database) Get(id string) (Subnet, error) {
+	subnets, err := c.Query(ID(id))
+	if err != nil {
+		return Subnet{}, err
 	}
 
-	return
+	if len(subnets) == 0 {
+		return Subnet{}, errors.New("not found")
+	}
+
+	return subnets[0], nil
+}
+
+func parseRecord(result map[string]Subnet, record *neo4j.Record) {
+	var id string
+	for _, v := range record.Values {
+		if node, ok := v.(dbtype.Node); ok {
+			switch node.Labels[0] {
+			case "Subnet":
+				id = strconv.Itoa(int(node.Id))
+			}
+		}
+	}
+
+	subnet, found := result[id]
+	if !found {
+		subnet = Subnet{ID: id}
+	}
+
+	for _, v := range record.Values {
+		if node, ok := v.(dbtype.Node); ok {
+			switch node.Labels[0] {
+			case "Subnet":
+				if cidr, ok := node.Props["cidr"]; ok {
+					subnet.CIDR = cidr.(string)
+				}
+
+				if netClass, ok := node.Props["net_class"]; ok {
+					subnet.NetClass = netClass.(string)
+				}
+			case "Interface":
+				found := false
+				iid := strconv.Itoa(int(node.Id))
+				for _, i := range subnet.Interfaces {
+					if i.ID == iid {
+						found = true
+						break
+					}
+				}
+
+				if !found {
+					subnet.Interfaces = append(subnet.Interfaces, Interface{ID: strconv.Itoa(int(node.Id))})
+				}
+			}
+		}
+	}
+
+	result[id] = subnet
 }
