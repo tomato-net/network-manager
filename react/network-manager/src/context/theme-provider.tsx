@@ -1,7 +1,13 @@
 import * as React from 'react';
 
-import { themes, ThemeContext } from './theme';
-import { useMediaQuery, ThemeProvider as MThemeProvider } from '@mui/material';
+import {
+    themes,
+    ThemeContext
+} from './theme';
+import {
+    useMediaQuery,
+    ThemeProvider as MThemeProvider
+} from '@mui/material';
 
 interface Props {
     children: React.ReactChild;

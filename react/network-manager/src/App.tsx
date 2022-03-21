@@ -1,29 +1,42 @@
 import React from 'react';
 
 import './App.css';
-import * as Components from './components';
-import { ThemeProvider } from './context';
-import { Stack, Typography } from "@mui/material";
+import { routes } from "./config";
+import {
+    ThemeProvider
+} from './context';
+import {
+    Paper,
+    Typography
+} from "@mui/material";
+import {
+    Route,
+    Routes,
+    BrowserRouter as Router,
+} from "react-router-dom";
+import * as Pages from "./pages";
 
 function App() {
   return (
       <ThemeProvider>
-          <Stack sx={{
+          <Paper
+              square
+              sx={{
               display: 'flex',
               width: '100%',
-              alignItems: 'center',
-              justifyContent: 'center',
+              height: '100%',
               bgcolor: 'background.default',
               color: 'text.primary',
-              borderRadius: 1,
-              p: 3,
           }}>
-              <Components.ThemeToggleButton />
-              <Components.SubnetSearch />
-              <Typography variant={`subtitle1`}>
-                  Powered by {process.env.REACT_APP_API_URL}
-              </Typography>
-          </Stack>
+              <Router>
+                  <Routes>
+                      <Route path={`/`} element={<Pages.Layout />}>
+                          <Route index element={<Pages.Home />} />
+                          <Route path={`subnet/:subnetId`} element={<Pages.Subnet />} />
+                      </Route>
+                  </Routes>
+              </Router>
+          </Paper>
       </ThemeProvider>
   );
 }

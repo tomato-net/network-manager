@@ -8,6 +8,7 @@ export interface Interfaces {
 export interface Subnet {
     id: string;
     cidr: string;
+    net_class: string;
     interfaces: Interfaces[];
 }
 
