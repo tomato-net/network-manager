@@ -1,23 +1,26 @@
 import * as React from "react";
 import { Service } from "./service";
-import {Identifiable} from "./interface";
 
-export interface Subnet {
+export interface Identifiable {
     id: string;
-    cidr: string;
-    net_class: string;
-    interfaces: Identifiable[];
 }
 
-export type Subnets = Array<Subnet>
+export interface Interface {
+    id: string;
+    name: string;
+    subnets: Identifiable[];
+    packages: Identifiable[];
+}
 
-export const useSubnetService = ( id: string ) => {
-    const [result, setResult] = React.useState<Service<Subnet>>({
+export type Interfaces = Array<Interface>
+
+export const useInterfaceService = ( id: string ) => {
+    const [result, setResult] = React.useState<Service<Interface>>({
         status: "loading",
     });
 
     React.useEffect(() => {
-        fetch(`${process.env.REACT_APP_API_URL}/subnets/${id}`)
+        fetch(`${process.env.REACT_APP_API_URL}/interfaces/${id}`)
             .then(response => response.json())
             .then(response => setResult({ status: 'loaded', payload: response }))
             .catch(error => setResult({ status: 'error', error }));
@@ -26,20 +29,20 @@ export const useSubnetService = ( id: string ) => {
     return result;
 }
 
-export const useSubnetsService = ( cidr: string ) => {
-    const [result, setResult] = React.useState<Service<Subnets>>({
+export const useInterfacesService = ( name: string ) => {
+    const [result, setResult] = React.useState<Service<Interfaces>>({
         status: "loading",
     });
 
-    const params: { [key: string]: string } = { cidr: cidr }
+    const params: { [key: string]: string } = { name: name }
     const queryString = Object.keys(params).map((key) => key + '=' + params[key]).join('&');
 
     React.useEffect(() => {
-        fetch(`${process.env.REACT_APP_API_URL}/subnets/?${queryString}`)
+        fetch(`${process.env.REACT_APP_API_URL}/interfaces/?${queryString}`)
             .then(response => response.json())
             .then(response => setResult({ status: 'loaded', payload: response }))
             .catch(error => setResult({ status: 'error', error }));
-    }, [cidr]);
+    }, [name]);
 
     return result;
 }

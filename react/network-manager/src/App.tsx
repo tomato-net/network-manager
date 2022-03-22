@@ -1,7 +1,6 @@
 import React from 'react';
 
 import './App.css';
-import { routes } from "./config";
 import {
     ThemeProvider
 } from './context';
@@ -33,6 +32,7 @@ function App() {
                       <Route path={`/`} element={<Pages.Layout />}>
                           <Route index element={<Pages.Home />} />
                           <Route path={`subnet/:subnetId`} element={<Pages.Subnet />} />
+                          <Route path={`interface/:interfaceId`} element={<Pages.Interface />} />
                       </Route>
                   </Routes>
               </Router>
