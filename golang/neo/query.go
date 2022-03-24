@@ -91,6 +91,11 @@ func Equals(key, value string) *Condition {
 	return &Condition{Left: key, Right: value, Operator: "="}
 }
 
+func In(key string, values []string) *Condition {
+	inValues := fmt.Sprintf("[%s]", strings.Join(values, ", "))
+	return &Condition{Left: key, Right: inValues, Operator: "IN"}
+}
+
 func And(left *Condition, right ...*Condition) *Condition {
 	if len(right) == 1 {
 		return &Condition{Left: left.Build(), Right: right[0].Build(), Operator: "AND"}

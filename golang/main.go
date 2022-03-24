@@ -9,6 +9,7 @@ import (
 
 	_interface "network-manager/interface"
 	"network-manager/middleware"
+	_package "network-manager/package"
 	"network-manager/router"
 	"network-manager/server"
 	"network-manager/subnet"
@@ -69,6 +70,16 @@ func main() {
 					},
 				},
 				RESTController: &_interface.Controller{Database: &_interface.Database{Driver: driver}},
+			},
+			&router.RESTRoute{
+				Route: &router.Route{
+					Path: "/packages/",
+					Middleware: []middleware.Handler{
+						JSONMiddleware,
+						loggerMiddleware,
+					},
+				},
+				RESTController: &_package.Controller{Database: &_package.Database{Driver: driver}},
 			},
 		},
 	}

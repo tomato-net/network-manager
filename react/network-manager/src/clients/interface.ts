@@ -29,12 +29,25 @@ export const useInterfaceService = ( id: string ) => {
     return result;
 }
 
-export const useInterfacesService = ( name: string ) => {
+export interface IInterfacesParameters {
+    name?: string;
+    ids?: string[];
+}
+
+export const useInterfacesService = ({ name, ids }: IInterfacesParameters) => {
     const [result, setResult] = React.useState<Service<Interfaces>>({
         status: "loading",
     });
 
-    const params: { [key: string]: string } = { name: name }
+    let params: { [key: string]: string } = {}
+    if (name !== undefined) {
+       params.name = name
+    }
+
+    if (ids !== undefined) {
+        params.id = ids.join('|')
+    }
+
     const queryString = Object.keys(params).map((key) => key + '=' + params[key]).join('&');
 
     React.useEffect(() => {

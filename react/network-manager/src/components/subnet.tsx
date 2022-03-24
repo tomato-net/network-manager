@@ -3,9 +3,7 @@ import { useSubnetService } from "../clients";
 import {Typography} from "@mui/material";
 import { useParams } from "react-router-dom";
 
-export const Subnet: React.FC<{}> = () => {
-    const { subnetId } = useParams();
-    const id = subnetId as string
+export const Subnet: React.FC<{ id: string }> = ({ id }) => {
     const subnetService = useSubnetService(id)
 
     if (subnetService.status != 'loaded') {

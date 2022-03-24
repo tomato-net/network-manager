@@ -2,8 +2,15 @@ package _interface
 
 import (
 	"encoding/json"
+	"errors"
 	"net/url"
+	"strings"
 )
+
+type ListOptions struct {
+	Name *string
+	ID   []string
+}
 
 type Controller struct {
 	Database *Database
@@ -23,11 +30,20 @@ func (c *Controller) Get(s string) (interface{}, error) {
 	return iface, nil
 }
 
-func (c *Controller) List(m map[string]string) ([]interface{}, error) {
+func (c *Controller) List(m interface{}) ([]interface{}, error) {
+	opts, ok := m.(ListOptions)
+	if !ok {
+		return nil, errors.New("invalid options")
+	}
+
 	options := make([]Option, 0)
-	if name, ok := m["name"]; ok {
-		options = append(options, Name(name))
+	if opts.Name != nil {
+		options = append(options, Name(*opts.Name))
 		options = append(options, FuzzyMatch())
+	}
+
+	if len(opts.ID) > 0 {
+		options = append(options, ID(opts.ID))
 	}
 
 	ifaces, err := c.Database.Query(options...)
@@ -63,11 +79,17 @@ func (c *Controller) Unmarshal(bytes []byte) (interface{}, error) {
 	return iface, nil
 }
 
-func (c *Controller) FilterQuery(values url.Values) map[string]string {
-	filteredQuery := make(map[string]string, 0)
+func (c *Controller) FilterQuery(values url.Values) interface{} {
+	options := ListOptions{}
 	if values.Has("name") {
-		filteredQuery["name"] = values.Get("name")
+		name := values.Get("name")
+		options.Name = &name
 	}
 
-	return filteredQuery
+	if values.Has("id") {
+		id := values.Get("id")
+		options.ID = strings.Split(id, "|")
+	}
+
+	return options
 }

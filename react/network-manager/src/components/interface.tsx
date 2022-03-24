@@ -1,11 +1,8 @@
 import * as React from "react";
 import { useInterfaceService } from "../clients";
 import {Typography} from "@mui/material";
-import { useParams } from "react-router-dom";
 
-export const Interface: React.FC<{}> = () => {
-    const { interfaceId } = useParams();
-    const id = interfaceId as string
+export const Interface: React.FC<{ id: string }> = ({ id }) => {
     const interfaceService = useInterfaceService(id)
 
     if (interfaceService.status != 'loaded') {

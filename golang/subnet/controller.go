@@ -18,7 +18,8 @@ func (c *Controller) Get(id string) (interface{}, error) {
 	return subnet, nil
 }
 
-func (c *Controller) List(listOpts map[string]string) ([]interface{}, error) {
+func (c *Controller) List(i interface{}) ([]interface{}, error) {
+	listOpts := i.(map[string]string)
 	options := make([]Option, 0)
 	if cidr, ok := listOpts["cidr"]; ok {
 		options = append(options, MatchingCIDR(cidr))
@@ -59,7 +60,7 @@ func (c *Controller) Unmarshal(obj []byte) (interface{}, error) {
 	return subnet, nil
 }
 
-func (c *Controller) FilterQuery(values url.Values) map[string]string {
+func (c *Controller) FilterQuery(values url.Values) interface{} {
 	filteredQuery := make(map[string]string, 0)
 	if values.Has("cidr") {
 		filteredQuery["cidr"] = values.Get("cidr")

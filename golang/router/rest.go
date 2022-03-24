@@ -13,11 +13,11 @@ import (
 type RESTController interface {
 	Create(interface{}) (interface{}, error)
 	Get(string) (interface{}, error)
-	List(map[string]string) ([]interface{}, error)
+	List(interface{}) ([]interface{}, error)
 	Update(string, interface{}) (interface{}, error)
 	Delete(string) (interface{}, error)
 	Unmarshal([]byte) (interface{}, error)
-	FilterQuery(url.Values) map[string]string
+	FilterQuery(url.Values) interface{}
 }
 
 type RESTRoute struct {

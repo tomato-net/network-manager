@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Autocomplete, TextField} from "@mui/material";
-import {useSubnetsService, useInterfacesService} from "../clients";
+import {useSubnetsService, useInterfacesService, usePackagesService} from "../clients";
 import {useNavigate} from "react-router-dom";
 
 interface Option {
@@ -13,12 +13,14 @@ export const Search: React.FC = () => {
     const [search, setSearch] = React.useState("")
     const [subnetOptions, setSubnetOptions] = React.useState<Option[]>([])
     const [interfaceOptions, setInterfaceOptions] = React.useState<Option[]>([])
+    const [packageOptions, setPackageOptions] = React.useState<Option[]>([])
     const [options, setOptions] = React.useState<Option[]>([])
 
 
 
     const subnetsService = useSubnetsService(search)
-    const interfaceService = useInterfacesService(search)
+    const interfaceService = useInterfacesService({ name: search })
+    const packagesService = usePackagesService(search)
     const navigate = useNavigate()
 
     const handleSearch = (_: React.SyntheticEvent, newValue: string) => setSearch(newValue)
@@ -34,11 +36,17 @@ export const Search: React.FC = () => {
         }
     }, [search])
 
+    React.useMemo(() => {
+        if (packagesService.status === 'loaded') {
+            setPackageOptions(packagesService.payload.map((p) => ({id: p.id, display: p.name, type: 'package'})))
+        }
+    }, [search])
+
     const handleSelect = (_: React.SyntheticEvent, value: string | Option | null) => navigate(`/${(value as Option).type}/${(value as Option).id}`)
 
     React.useMemo(() => {
-        setOptions(subnetOptions.concat(interfaceOptions))
-    }, [subnetOptions, interfaceOptions])
+        setOptions(subnetOptions.concat(interfaceOptions).concat(packageOptions))
+    }, [subnetOptions, interfaceOptions, packageOptions])
 
     return (
         <div>

@@ -33,6 +33,7 @@ function App() {
                           <Route index element={<Pages.Home />} />
                           <Route path={`subnet/:subnetId`} element={<Pages.Subnet />} />
                           <Route path={`interface/:interfaceId`} element={<Pages.Interface />} />
+                          <Route path={`package/:packageId`} element={<Pages.Package />} />
                       </Route>
                   </Routes>
               </Router>

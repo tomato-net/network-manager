@@ -1,9 +1,9 @@
-package _interface
+package _package
 
 type Options struct {
 	Fuzzy bool
 	Name  *string
-	ID    []string
+	ID    *string
 	Limit int
 }
 
@@ -21,9 +21,9 @@ func Name(name string) Option {
 	}
 }
 
-func ID(id []string) Option {
+func ID(id string) Option {
 	return func(args *Options) {
-		args.ID = id
+		args.ID = &id
 	}
 }
 
