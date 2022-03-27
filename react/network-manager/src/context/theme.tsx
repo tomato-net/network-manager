@@ -8,6 +8,7 @@ import {
     LinkProps,
     Theme
 } from '@mui/material';
+import {blue, red} from "@mui/material/colors";
 
 const LinkBehaviour = React.forwardRef<
     any,
@@ -27,6 +28,9 @@ export const themes: Themes = {
     dark: createTheme({
         palette: {
             mode: 'dark',
+            primary: {
+                main: blue["500"],
+            },
         },
         components: {
             MuiLink: {
@@ -44,6 +48,9 @@ export const themes: Themes = {
     light: createTheme({
         palette: {
             mode: 'light',
+            primary: {
+                main: red["500"],
+            },
         },
         components: {
             MuiLink: {

@@ -28,19 +28,19 @@ export const Search: React.FC = () => {
         if (subnetsService.status === 'loaded') {
             setSubnetOptions(subnetsService.payload.map((s) => ({ id: s.id, display: s.cidr, type: 'subnet' })))
         }
-    }, [search])
+    }, [subnetsService])
 
     React.useMemo(() => {
         if (interfaceService.status === 'loaded') {
             setInterfaceOptions(interfaceService.payload.map((i) => ({id: i.id, display: i.name, type: 'interface'})))
         }
-    }, [search])
+    }, [interfaceService])
 
     React.useMemo(() => {
         if (packagesService.status === 'loaded') {
             setPackageOptions(packagesService.payload.map((p) => ({id: p.id, display: p.name, type: 'package'})))
         }
-    }, [search])
+    }, [packagesService])
 
     const handleSelect = (_: React.SyntheticEvent, value: string | Option | null) => navigate(`/${(value as Option).type}/${(value as Option).id}`)
 
@@ -67,7 +67,7 @@ export const Search: React.FC = () => {
                     )
                 }}
 
-                renderInput={(params) => <TextField {...params} label="Search subnets and interfaces..." />}
+                renderInput={(params) => <TextField {...params} label="Search..." />}
             />
         </div>
     )

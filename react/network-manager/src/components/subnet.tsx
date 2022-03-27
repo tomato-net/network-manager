@@ -1,22 +1,38 @@
 import * as React from "react";
 import { useSubnetService } from "../clients";
 import {Typography} from "@mui/material";
-import { useParams } from "react-router-dom";
+import {Interface} from "./interface";
 
-export const Subnet: React.FC<{ id: string }> = ({ id }) => {
+type Display =
+    | 'full'
+    | 'minimal'
+
+
+export const Subnet: React.FC<{ id: string, display?: Display }> = ({ id, display = 'full' }) => {
     const subnetService = useSubnetService(id)
 
     if (subnetService.status != 'loaded') {
        return null
     }
 
-    return (
-        <Typography>
-            CIDR: {subnetService.payload.cidr}
-            <br />
+    const additionalContent = <div>
+        <Typography variant={`body1`}>
             Net Class: {subnetService.payload.net_class}
-            <br />
-            Interfaces: {subnetService.payload.interfaces.map((i) => i.id).join(", ")}
         </Typography>
+        <Typography variant={`body1`}>
+            Interfaces
+        </Typography>
+        {subnetService.payload.interfaces.map((i) => (
+            <Interface id={i.id} display={`minimal`} />
+        ))}
+    </div>
+
+    return (
+        <div>
+            <Typography>
+                {subnetService.payload.cidr}
+            </Typography>
+            {display === 'full' && additionalContent}
+        </div>
     )
 }

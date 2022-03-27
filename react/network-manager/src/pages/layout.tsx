@@ -2,7 +2,7 @@ import * as React from "react";
 import {
     ThemeToggleButton
 } from "../components";
-import {Button, Stack} from "@mui/material";
+import {Button, Paper, Stack} from "@mui/material";
 import {Outlet} from "react-router-dom";
 
 export const Layout: React.FC<{}> = () => {
@@ -14,7 +14,14 @@ export const Layout: React.FC<{}> = () => {
                     Home
                 </Button>
             </Stack>
-            <Outlet />
+            <Paper sx={{
+                justifyContent: "center",
+                textAlign: "center",
+                width: "100%",
+                height: "100%",
+            }}>
+                <Outlet />
+            </Paper>
         </Stack>
     )
 }

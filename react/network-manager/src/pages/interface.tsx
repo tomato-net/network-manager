@@ -7,13 +7,6 @@ export const Interface: React.FC<{}> = () => {
     const { interfaceId } = useParams();
     const id = interfaceId as string
     return (
-        <Paper sx={{
-            justifyContent: "center",
-            textAlign: "center",
-            width: "100%",
-            height: "100%",
-        }}>
-            <InterfaceView id={id} />
-        </Paper>
+        <InterfaceView id={id} />
     )
 }
