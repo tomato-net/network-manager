@@ -6,7 +6,7 @@ import {
 } from './theme';
 import {
     useMediaQuery,
-    ThemeProvider as MThemeProvider
+    ThemeProvider as MThemeProvider, CssBaseline
 } from '@mui/material';
 
 interface Props {
@@ -30,6 +30,7 @@ export const ThemeProvider: React.FC<Props> = props => {
     return (
         <ThemeContext.Provider value={{ theme, toggleTheme }}>
             <MThemeProvider theme={theme}>
+                <CssBaseline />
                 {props.children}
             </MThemeProvider>
         </ThemeContext.Provider>

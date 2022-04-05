@@ -18,26 +18,16 @@ import * as Pages from "./pages";
 function App() {
   return (
       <ThemeProvider>
-          <Paper
-              square
-              sx={{
-              display: 'flex',
-              width: '100%',
-              height: '100%',
-              bgcolor: 'background.default',
-              color: 'text.primary',
-          }}>
-              <Router>
-                  <Routes>
-                      <Route path={`/`} element={<Pages.Layout />}>
-                          <Route index element={<Pages.Home />} />
-                          <Route path={`subnet/:subnetId`} element={<Pages.Subnet />} />
-                          <Route path={`interface/:interfaceId`} element={<Pages.Interface />} />
-                          <Route path={`package/:packageId`} element={<Pages.Package />} />
-                      </Route>
-                  </Routes>
-              </Router>
-          </Paper>
+          <Router>
+              <Routes>
+                  <Route path={`/`} element={<Pages.Layout />}>
+                      <Route index element={<Pages.Home />} />
+                      <Route path={`subnet/:subnetId`} element={<Pages.Subnet />} />
+                      <Route path={`interface/:interfaceId`} element={<Pages.Interface />} />
+                      <Route path={`package/:packageId`} element={<Pages.Package />} />
+                  </Route>
+              </Routes>
+          </Router>
       </ThemeProvider>
   );
 }

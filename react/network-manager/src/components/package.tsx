@@ -23,7 +23,7 @@ export const Package: React.FC<IPackageProps> = ({ id, display = 'full' }) => {
         return (
             <div>
                 <Typography>
-                    {packageService.payload.id}
+                    {packageService.payload.name}
                 </Typography>
             </div>
         )

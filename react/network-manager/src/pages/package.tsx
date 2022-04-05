@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Interface, ResourceTitle} from "../components";
+import {Interface, ResourceInfo, ResourceTitle} from "../components";
 import {useParams} from "react-router-dom";
 import {usePackageService} from "../clients";
 import {Box, Paper, PaperProps, Stack, Typography} from "@mui/material";
@@ -18,13 +18,8 @@ export const Package: React.FC<{}> = () => {
             {packageService.payload.name}
     </ResourceTitle>
 
-    const packageInfo = <InfoBlock>
-        <InfoHeader>
-            PACKAGE INFO
-        </InfoHeader>
-        <InfoElement>
-            No info
-        </InfoElement>
+    const resourceInfo = <InfoBlock>
+        <ResourceInfo title={`test`} value={`foo`} />
     </InfoBlock>
 
     const interfaceInfo = <InfoBlock>
@@ -40,10 +35,10 @@ export const Package: React.FC<{}> = () => {
 
     return (
         <Box sx={{height: "100%"}}>
-            <Stack sx={{height: "100%"}}>
+            <Stack sx={{height: "100%", justifyContent: 'center', textAlign: 'center', alignItems: 'center'}}>
                 {nameHeader}
+                {resourceInfo}
                 <Stack direction={`row`} sx={{height: "100%"}}>
-                    {packageInfo}
                     {interfaceInfo}
                 </Stack>
             </Stack>
@@ -53,13 +48,18 @@ export const Package: React.FC<{}> = () => {
 
 const InfoBlock = styled(Paper)<PaperProps>(({ theme }) => ({
     height: "fill",
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
     width: 400,
     padding: theme.spacing(2),
     margin: theme.spacing(0, 1, 2, 2),
-    backgroundColor: theme.palette.secondary.main,
 }));
 
-const InfoElement = styled("div")()
+const InfoElement = styled("div")(() => ({
+    justifyContent: 'center',
+}));
+
 const InfoHeader = styled("div")(({ theme }) => ({
     padding: theme.spacing(2),
 }))

@@ -1,27 +1,18 @@
 import * as React from "react";
 import {
+    NavBar,
     ThemeToggleButton
 } from "../components";
-import {Button, Paper, Stack} from "@mui/material";
+import {Box, Button, Paper, Stack} from "@mui/material";
 import {Outlet} from "react-router-dom";
 
 export const Layout: React.FC<{}> = () => {
     return (
-        <Stack sx={{width: "100%"}}>
-            <Stack direction={`row`}>
-                <ThemeToggleButton />
-                <Button href={"/"}>
-                    Home
-                </Button>
-            </Stack>
-            <Paper sx={{
-                justifyContent: "center",
-                textAlign: "center",
-                width: "100%",
-                height: "100%",
-            }}>
+        <Box sx={{ height: '100%', p: 2 }}>
+            <NavBar />
+            <Stack sx={{width: "100%"}}>
                 <Outlet />
-            </Paper>
-        </Stack>
+            </Stack>
+        </Box>
     )
 }

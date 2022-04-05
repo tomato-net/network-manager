@@ -4,3 +4,5 @@ export * from "./subnet";
 export * from "./interface";
 export * from "./package";
 export * from "./resource-title";
+export * from "./navbar";
+export * from "./resource-info";

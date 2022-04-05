@@ -16,13 +16,13 @@ export const Interface: React.FC<{ id: string, display?: Display }> = ({ id, dis
 
     const additionalContent = <div>
         <Typography variant={`body1`} >
-            Packages
+            Packages:
         </Typography>
         {interfaceService.payload.packages.map((p) => (
             <Package id={p.id} display={`minimal`} />
         ))}
         <Typography variant={`body1`}>
-            Subnets
+            Subnets:
         </Typography>
             {interfaceService.payload.subnets.map((s) => (
                 <Subnet id={s.id} display={`minimal`} />

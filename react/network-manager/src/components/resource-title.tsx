@@ -13,10 +13,8 @@ const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
 
 export const ResourceTitle: React.FC<{}> = ({ children }) => {
     return (
-        <StyledPaper>
-            <Typography variant={`h5`}>
-                {children}
-            </Typography>
-        </StyledPaper>
+        <Typography variant={`h5`}>
+            {children}
+        </Typography>
     )
 }
