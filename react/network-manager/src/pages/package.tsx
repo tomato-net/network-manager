@@ -2,7 +2,7 @@ import * as React from "react";
 import {Interface, ResourceTitle} from "../components";
 import {useParams} from "react-router-dom";
 import {usePackageService} from "../clients";
-import {Box, Paper, PaperProps, Stack, Typography} from "@mui/material";
+import {Box, List, ListItem, ListItemButton, Paper, PaperProps, Stack} from "@mui/material";
 import {styled} from "@mui/material/styles";
 
 export const Package: React.FC<{}> = () => {
@@ -19,14 +19,15 @@ export const Package: React.FC<{}> = () => {
     </ResourceTitle>
 
     const interfaceInfo = <InfoBlock>
-        <InfoHeader>
-            INTERFACES
-        </InfoHeader>
-        {packageService.payload.interfaces.map((i) => (
-            <InfoElement>
-                <Interface id={i.id} display={`minimal`} />
-            </InfoElement>
-        ))}
+        <List dense subheader={`INTERFACES`} sx={{maxHeight: 500, overflow: 'auto'}}>
+            {packageService.payload.interfaces.map((i) => (
+                <ListItem key={i.id}>
+                    <ListItemButton href={`/interface/${i.id}`}>
+                        <Interface id={i.id} display={`minimal`} />
+                    </ListItemButton>
+                </ListItem>
+            ))}
+        </List>
     </InfoBlock>
 
     return (
@@ -56,5 +57,5 @@ const InfoElement = styled("div")(() => ({
 }));
 
 const InfoHeader = styled("div")(({ theme }) => ({
-    padding: theme.spacing(2),
+    padding: theme.spacing(0, 2, 2),
 }))

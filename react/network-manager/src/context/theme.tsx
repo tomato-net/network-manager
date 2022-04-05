@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 import {
     createTheme,
-    LinkProps,
+    LinkProps, ListItemButtonProps,
     Theme
 } from '@mui/material';
 import {blueGrey} from "@mui/material/colors";
@@ -47,6 +47,11 @@ export const themes: Themes = {
                     LinkComponent: LinkBehaviour,
                 },
             },
+            MuiListItemButton: {
+                defaultProps: {
+                    component: LinkBehaviour,
+                } as ListItemButtonProps
+            },
         },
     }),
     light: createTheme({
@@ -70,6 +75,11 @@ export const themes: Themes = {
                 defaultProps: {
                     LinkComponent: LinkBehaviour,
                 },
+            },
+            MuiListItemButton: {
+                defaultProps: {
+                    component: LinkBehaviour,
+                } as ListItemButtonProps
             },
         },
     }),
