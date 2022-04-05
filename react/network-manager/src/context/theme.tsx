@@ -8,7 +8,7 @@ import {
     LinkProps,
     Theme
 } from '@mui/material';
-import {blue, blueGrey, pink, red} from "@mui/material/colors";
+import {blueGrey} from "@mui/material/colors";
 
 const LinkBehaviour = React.forwardRef<
     any,

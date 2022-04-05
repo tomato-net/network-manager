@@ -1,6 +1,5 @@
 import * as React from "react";
 import {Subnet as SubnetView} from "../components";
-import {Paper} from "@mui/material";
 import {useParams} from "react-router-dom";
 
 export const Subnet: React.FC<{}> = () => {

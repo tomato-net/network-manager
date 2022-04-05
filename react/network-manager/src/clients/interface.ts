@@ -29,12 +29,12 @@ export const useInterfaceService = ( id: string ) => {
     return result;
 }
 
-export interface IInterfacesParameters {
+export interface InterfacesParameters {
     name?: string;
     ids?: string[];
 }
 
-export const useInterfacesService = ({ name, ids }: IInterfacesParameters) => {
+export const useInterfacesService = ({ name, ids }: InterfacesParameters) => {
     const [result, setResult] = React.useState<Service<Interfaces>>({
         status: "loading",
     });

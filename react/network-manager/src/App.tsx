@@ -1,18 +1,12 @@
 import React from 'react';
-
-import './App.css';
-import {
-    ThemeProvider
-} from './context';
-import {
-    Paper,
-    Typography
-} from "@mui/material";
 import {
     Route,
     Routes,
     BrowserRouter as Router,
 } from "react-router-dom";
+
+import './App.css';
+import {ThemeProvider} from './context';
 import * as Pages from "./pages";
 
 function App() {

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Interface, ResourceInfo, ResourceTitle} from "../components";
+import {Interface, ResourceTitle} from "../components";
 import {useParams} from "react-router-dom";
 import {usePackageService} from "../clients";
 import {Box, Paper, PaperProps, Stack, Typography} from "@mui/material";
@@ -18,10 +18,6 @@ export const Package: React.FC<{}> = () => {
             {packageService.payload.name}
     </ResourceTitle>
 
-    const resourceInfo = <InfoBlock>
-        <ResourceInfo title={`test`} value={`foo`} />
-    </InfoBlock>
-
     const interfaceInfo = <InfoBlock>
         <InfoHeader>
             INTERFACES
@@ -37,7 +33,6 @@ export const Package: React.FC<{}> = () => {
         <Box sx={{height: "100%"}}>
             <Stack sx={{height: "100%", justifyContent: 'center', textAlign: 'center', alignItems: 'center'}}>
                 {nameHeader}
-                {resourceInfo}
                 <Stack direction={`row`} sx={{height: "100%"}}>
                     {interfaceInfo}
                 </Stack>

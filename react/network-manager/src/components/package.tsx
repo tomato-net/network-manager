@@ -7,12 +7,12 @@ type Display =
     | 'full'
     | 'minimal'
 
-interface IPackageProps {
+interface PackageProps {
     id: string;
     display?: Display;
 }
 
-export const Package: React.FC<IPackageProps> = ({ id, display = 'full' }) => {
+export const Package: React.FC<PackageProps> = ({ id, display = 'full' }) => {
     const packageService = usePackageService(id)
 
     if (packageService.status != 'loaded') {
