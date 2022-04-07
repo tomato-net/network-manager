@@ -43,7 +43,7 @@ func main() {
 	defer driver.Close()
 
 	rtr := &router.Router{
-		Handlers: []router.Handler{
+		Routes: []router.Handler{
 			&router.HTTPRoute{
 				Route: &router.Route{
 					Path: "/",

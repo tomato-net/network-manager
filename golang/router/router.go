@@ -5,11 +5,11 @@ import (
 )
 
 type Router struct {
-	Handlers []Handler
+	Routes []Handler
 }
 
 func (r *Router) SetupRoutes(mux *http.ServeMux) {
-	for _, r := range r.Handlers {
+	for _, r := range r.Routes {
 		r.Handle(mux)
 	}
 }
