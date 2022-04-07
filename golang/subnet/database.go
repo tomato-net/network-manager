@@ -98,7 +98,7 @@ func parseRecord(result map[string]Subnet, record *neo4j.Record) {
 
 	subnet, found := result[id]
 	if !found {
-		subnet = Subnet{ID: id}
+		subnet = Subnet{ID: id, Interfaces: make([]Interface, 0)}
 	}
 
 	for _, v := range record.Values {

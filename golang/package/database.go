@@ -99,7 +99,7 @@ func parseRecord(result map[string]Package, record *neo4j.Record) {
 
 	p, found := result[id]
 	if !found {
-		p = Package{ID: id}
+		p = Package{ID: id, Interfaces: make([]Interface, 0)}
 	}
 
 	for _, v := range record.Values {

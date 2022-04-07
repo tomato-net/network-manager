@@ -138,15 +138,6 @@ func (q *Query) Build() string {
 	matchParts := make([]string, 0)
 	for k, v := range q.opts.MatchTypes {
 		matchPart := fmt.Sprintf("(%s:%s)", k, v)
-
-		if or, ok := q.opts.OutwardsRelationship[k]; ok {
-			matchPart = fmt.Sprintf("%s%s", matchPart, or)
-		}
-
-		if ir, ok := q.opts.InwardsRelationship[k]; ok {
-			matchPart = fmt.Sprintf("%s%s", ir, matchPart)
-		}
-
 		matchParts = append(matchParts, matchPart)
 	}
 	queryParts = append(queryParts, strings.Join(matchParts, ", "))
@@ -154,6 +145,13 @@ func (q *Query) Build() string {
 	if q.opts.Condition != nil {
 		conditionPart := fmt.Sprintf("WHERE %s", q.opts.Condition.Build())
 		queryParts = append(queryParts, conditionPart)
+	}
+
+	for v, r := range q.opts.OutwardsRelationship {
+		queryParts = append(queryParts, fmt.Sprintf("OPTIONAL MATCH (%s)%s", v, r))
+	}
+	for v, r := range q.opts.InwardsRelationship {
+		queryParts = append(queryParts, fmt.Sprintf("OPTIONAL MATCH %s(%s)", r, v))
 	}
 
 	returnPart := fmt.Sprintf("RETURN %s", strings.Join(q.opts.Returns, ", "))

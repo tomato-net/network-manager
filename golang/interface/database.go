@@ -100,7 +100,7 @@ func parseRecord(result map[string]Interface, record *neo4j.Record) {
 
 	iface, found := result[id]
 	if !found {
-		iface = Interface{ID: id}
+		iface = Interface{ID: id, Subnets: make([]Subnet, 0), Packages: make([]Package, 0)}
 	}
 
 	for _, v := range record.Values {
