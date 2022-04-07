@@ -7,3 +7,7 @@
 * golang api
 * kubernetes
 * neo4j
+
+# todo
+
+* implement https://www.npmjs.com/package/react-inject-env
