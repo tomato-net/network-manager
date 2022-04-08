@@ -1,8 +1,8 @@
 import * as React from "react";
-import {Interface, ResourceTitle} from "../components";
+import {Interface, ResourceInfo, ResourceList, ResourceTitle} from "../components";
 import {useParams} from "react-router-dom";
 import {useSubnetService} from "../clients";
-import {Box, List, ListItem, ListItemButton, Paper, PaperProps, Stack, Typography} from "@mui/material";
+import {Box, Divider, ListItem, ListItemButton, Paper, PaperProps, Stack, Typography} from "@mui/material";
 import {styled} from "@mui/material/styles";
 
 export const Subnet: React.FC<{}> = () => {
@@ -18,8 +18,11 @@ export const Subnet: React.FC<{}> = () => {
         {subnetService.payload.cidr}
     </ResourceTitle>
 
+    const type = <ResourceInfo title={`type`} value={`subnet`} />
+    const netClass = <ResourceInfo title={`netclass`} value={subnetService.payload.net_class} />
+
     const interfaceInfo = <InfoBlock>
-        <List dense subheader={`INTERFACES`} sx={{maxHeight: 500, overflow: 'auto'}}>
+        <ResourceList title={`Interfaces`} >
             {subnetService.payload.interfaces.map((i) => (
                 <ListItem key={i.id}>
                     <ListItemButton href={`/interface/${i.id}`}>
@@ -27,22 +30,20 @@ export const Subnet: React.FC<{}> = () => {
                     </ListItemButton>
                 </ListItem>
             ))}
-        </List>
-    </InfoBlock>
-
-    const subnetInfo = <InfoBlock>
-        <Typography>
-            net class: {subnetService.payload.net_class}
-        </Typography>
+        </ResourceList>
     </InfoBlock>
 
     return (
         <Box sx={{height: "100%"}}>
             <Stack sx={{height: "100%", justifyContent: 'center', textAlign: 'center', alignItems: 'center'}}>
-                {nameHeader}
+                <Box justifyContent={`center`} marginBottom={1}>
+                    {nameHeader}
+                    <Divider variant="middle" sx={{mb: 1}}/>
+                    {type}
+                    {netClass}
+                </Box>
                 <Stack direction={`row`} sx={{height: "100%"}}>
                     {interfaceInfo}
-                    {subnetInfo}
                 </Stack>
             </Stack>
         </Box>

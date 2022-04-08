@@ -8,12 +8,12 @@ export interface ResourceInfoProps {
 
 export const ResourceInfo: React.FC<ResourceInfoProps> = ({ title , value}) => {
     return (
-        <Box>
-            <Stack direction={`row`} sx={{justifyContent: 'center'}}>
-                <Typography sx={{ mr: 2 }}>
-                    {title}:
+        <Box sx={{width: '100%', justifyContent:'center'}}>
+            <Stack direction={`row`} sx={{justifyContent: 'center', width: '100%'}}>
+                <Typography align={`left`} sx={{width: '40%'}}>
+                    <b>{title}</b>
                 </Typography>
-                <Typography>
+                <Typography align={`right`} sx={{width: '40%'}}>
                     {value}
                 </Typography>
             </Stack>

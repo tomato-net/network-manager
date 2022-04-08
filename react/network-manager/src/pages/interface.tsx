@@ -1,8 +1,8 @@
 import * as React from "react";
-import {Package, Subnet, ResourceTitle} from "../components";
+import {Package, Subnet, ResourceTitle, ResourceList, ResourceInfo} from "../components";
 import {useParams} from "react-router-dom";
 import {useInterfaceService} from "../clients";
-import {Box, List, ListItem, ListItemButton, Paper, PaperProps, Stack} from "@mui/material";
+import {Box, Divider, List, ListItem, ListItemButton, ListSubheader, Paper, PaperProps, Stack} from "@mui/material";
 import {styled} from "@mui/material/styles";
 
 export const Interface: React.FC<{}> = () => {
@@ -14,12 +14,11 @@ export const Interface: React.FC<{}> = () => {
         return null
     }
 
-    const nameHeader = <ResourceTitle>
-        {interfaceService.payload.name}
-    </ResourceTitle>
+    const nameHeader = <ResourceTitle>{interfaceService.payload.name}</ResourceTitle>
+    const type = <ResourceInfo title={`type`} value={`interface`}/>
 
     const packageInfo = <InfoBlock>
-        <List dense subheader={`PACKAGES`} sx={{maxHeight: 500, overflow: 'auto'}}>
+        <ResourceList title={`Packages`}>
             {interfaceService.payload.packages.map((i) => (
                 <ListItem key={i.id}>
                     <ListItemButton href={`/package/${i.id}`}>
@@ -27,11 +26,11 @@ export const Interface: React.FC<{}> = () => {
                     </ListItemButton>
                 </ListItem>
             ))}
-        </List>
+        </ResourceList>
     </InfoBlock>
 
     const subnetInfo = <InfoBlock>
-        <List dense subheader={`SUBNETS`} sx={{maxHeight: 500, overflow: 'auto'}}>
+        <ResourceList title={`Subnets`}>
             {interfaceService.payload.subnets.map((i) => (
                 <ListItem key={i.id}>
                     <ListItemButton href={`/subnet/${i.id}`}>
@@ -39,13 +38,17 @@ export const Interface: React.FC<{}> = () => {
                     </ListItemButton>
                 </ListItem>
             ))}
-        </List>
+        </ResourceList>
     </InfoBlock>
 
     return (
         <Box sx={{height: "100%"}}>
             <Stack sx={{height: "100%", justifyContent: 'center', textAlign: 'center', alignItems: 'center'}}>
-                {nameHeader}
+                <Box justifyContent={`center`} marginBottom={1}>
+                    {nameHeader}
+                    <Divider variant="middle" sx={{mb: 1}}/>
+                    {type}
+                </Box>
                 <Stack direction={`row`} sx={{height: "100%"}}>
                     {packageInfo}
                     {subnetInfo}

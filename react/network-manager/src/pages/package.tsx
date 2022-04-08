@@ -1,8 +1,8 @@
 import * as React from "react";
-import {Interface, ResourceTitle} from "../components";
+import {Interface, ResourceInfo, ResourceList, ResourceTitle} from "../components";
 import {useParams} from "react-router-dom";
 import {usePackageService} from "../clients";
-import {Box, List, ListItem, ListItemButton, Paper, PaperProps, Stack} from "@mui/material";
+import {Box, Divider, ListItem, ListItemButton, Paper, PaperProps, Stack} from "@mui/material";
 import {styled} from "@mui/material/styles";
 
 export const Package: React.FC<{}> = () => {
@@ -14,12 +14,11 @@ export const Package: React.FC<{}> = () => {
         return null
     }
 
-    const nameHeader = <ResourceTitle>
-            {packageService.payload.name}
-    </ResourceTitle>
+    const nameHeader = <ResourceTitle>{packageService.payload.name}</ResourceTitle>
+    const type = <ResourceInfo title={`type`} value={`package`}/>
 
     const interfaceInfo = <InfoBlock>
-        <List dense subheader={`INTERFACES`} sx={{maxHeight: 500, overflow: 'auto'}}>
+        <ResourceList title={`Interfaces`} >
             {packageService.payload.interfaces.map((i) => (
                 <ListItem key={i.id}>
                     <ListItemButton href={`/interface/${i.id}`}>
@@ -27,13 +26,17 @@ export const Package: React.FC<{}> = () => {
                     </ListItemButton>
                 </ListItem>
             ))}
-        </List>
+        </ResourceList>
     </InfoBlock>
 
     return (
         <Box sx={{height: "100%"}}>
             <Stack sx={{height: "100%", justifyContent: 'center', textAlign: 'center', alignItems: 'center'}}>
-                {nameHeader}
+                <Box justifyContent={`center`} marginBottom={1}>
+                    {nameHeader}
+                    <Divider variant="middle" sx={{mb: 1}}/>
+                    {type}
+                </Box>
                 <Stack direction={`row`} sx={{height: "100%"}}>
                     {interfaceInfo}
                 </Stack>
@@ -51,11 +54,3 @@ const InfoBlock = styled(Paper)<PaperProps>(({ theme }) => ({
     padding: theme.spacing(2),
     margin: theme.spacing(0, 1, 2, 2),
 }));
-
-const InfoElement = styled("div")(() => ({
-    justifyContent: 'center',
-}));
-
-const InfoHeader = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2, 2),
-}))

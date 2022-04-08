@@ -5,4 +5,5 @@ export * from "./interface";
 export * from "./package";
 export * from "./resource-title";
 export * from "./resource-info";
+export * from "./resource-list";
 export * from "./navbar";

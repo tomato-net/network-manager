@@ -10,7 +10,7 @@ export const NavBar: React.FC<{}> = () => {
                <Toolbar>
                    <Stack direction={`row`} spacing={2}>
                        <ThemeToggleButton />
-                       <Button variant={`contained`} href={"/"}>
+                       <Button variant={`outlined`} color={`inherit`} href={"/"}>
                            Home
                        </Button>
                        <Search />

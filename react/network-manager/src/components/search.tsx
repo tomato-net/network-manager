@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Autocomplete, TextField} from "@mui/material";
+import {Autocomplete, Box, CircularProgress, TextField} from "@mui/material";
 import {useSubnetsService, useInterfacesService, usePackagesService} from "../clients";
 import {useNavigate} from "react-router-dom";
 
@@ -15,12 +15,13 @@ export const Search: React.FC = () => {
     const [interfaceOptions, setInterfaceOptions] = React.useState<Option[]>([])
     const [packageOptions, setPackageOptions] = React.useState<Option[]>([])
     const [options, setOptions] = React.useState<Option[]>([])
-
-
+    const [open, setOpen] = React.useState<Boolean>(false)
 
     const subnetsService = useSubnetsService(search)
     const interfaceService = useInterfacesService({ name: search })
     const packagesService = usePackagesService(search)
+    const loading = open && (subnetsService.status != 'loaded' || interfaceService.status != 'loaded' || packagesService.status != 'loaded')
+
     const navigate = useNavigate()
 
     const handleSearch = (_: React.SyntheticEvent, newValue: string) => setSearch(newValue)
@@ -28,37 +29,56 @@ export const Search: React.FC = () => {
         if (subnetsService.status === 'loaded') {
             setSubnetOptions(subnetsService.payload.map((s) => ({ id: s.id, display: s.cidr, type: 'subnet' })))
         }
-    }, [subnetsService])
+    }, [search, subnetsService.status])
 
     React.useMemo(() => {
         if (interfaceService.status === 'loaded') {
             setInterfaceOptions(interfaceService.payload.map((i) => ({id: i.id, display: i.name, type: 'interface'})))
         }
-    }, [interfaceService])
+    }, [search, interfaceService.status])
 
     React.useMemo(() => {
         if (packagesService.status === 'loaded') {
             setPackageOptions(packagesService.payload.map((p) => ({id: p.id, display: p.name, type: 'package'})))
         }
-    }, [packagesService])
+    }, [search, packagesService.status])
 
     const handleSelect = (_: React.SyntheticEvent, value: string | Option | null) => navigate(`/${(value as Option).type}/${(value as Option).id}`)
 
     React.useMemo(() => {
+        console.log("memo")
         setOptions(subnetOptions.concat(interfaceOptions).concat(packageOptions))
     }, [subnetOptions, interfaceOptions, packageOptions])
 
     return (
-        <div>
+        <Box>
             <Autocomplete
                 id={`search`}
                 onInputChange={handleSearch}
                 onChange={handleSelect}
                 groupBy={(e) => e.type}
+                onOpen={() => { setOpen(true) }}
+                onClose={() => { setOpen(false) }}
                 freeSolo
                 sx={{ width: 300 }}
                 options={options}
+                loading={loading}
                 getOptionLabel={(option) => option.display}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        label={`Search...`}
+                        InputProps={{
+                            ...params.InputProps,
+                            endAdornment: (
+                                <React.Fragment>
+                                    {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                    {params.InputProps.endAdornment}
+                                </React.Fragment>
+                            )
+                        }}
+                    />
+                )}
                 renderOption={(props, option: Option) => {
                     return(
                         <li {...props} key={option.id}>
@@ -66,9 +86,7 @@ export const Search: React.FC = () => {
                         </li>
                     )
                 }}
-
-                renderInput={(params) => <TextField {...params} label="Search..." />}
             />
-        </div>
+        </Box>
     )
 }
