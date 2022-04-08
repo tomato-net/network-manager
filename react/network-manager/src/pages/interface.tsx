@@ -67,11 +67,3 @@ const InfoBlock = styled(Paper)<PaperProps>(({ theme }) => ({
     padding: theme.spacing(2),
     margin: theme.spacing(0, 1, 2, 2),
 }));
-
-const InfoElement = styled("div")(() => ({
-    justifyContent: 'center',
-}));
-
-const InfoHeader = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2, 2),
-}))
